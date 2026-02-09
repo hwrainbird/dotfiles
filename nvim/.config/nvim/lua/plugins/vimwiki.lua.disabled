@@ -1,0 +1,18 @@
+return {
+  -- The plugin location on GitHub
+  "vimwiki/vimwiki",
+  -- The event that triggers the plugin
+  event = "VeryLazy",
+  -- The keys that trigger the plugin
+  keys = { "<leader>ww", "<leader>wt" },
+  -- The configuration for the plugin
+  init = function()
+    vim.g.vimwiki_list = {
+      {
+        path = "~/vimwiki/",
+        syntax = "default",
+        ext = ".wiki",
+      },
+    }
+  end,
+}

@@ -1,0 +1,11 @@
+{
+  "name": "client_name",
+  "display_name": "Client Display Name",
+  "domains": [
+    "example.com"
+  ],
+  "contact_email": "",
+  "hourly_rate": 0,
+  "is_sub_client": false,
+  "description": "Client configuration"
+}

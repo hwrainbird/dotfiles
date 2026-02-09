@@ -1,0 +1,134 @@
+# Yazi keymap configuration with Colemak navigation
+
+[mgr]
+
+# Colemak navigation (matching nvim config)
+# m/n/e/i = left/down/up/right (h/j/k/l)
+prepend_keymap = [
+  # Mount keymaps
+  { on = ["<C-k>"], run = "plugin mount" },
+
+  # Basic navigation
+  { on = ["m"], run = "leave" },    # left (up directory)
+  { on = ["n"], run = "arrow 1" },  # down
+  { on = ["e"], run = "arrow -1" }, # up  
+  { on = ["i"], run = "enter" },    # right (enter directory)
+
+  # Arrow key navigation
+  { on = ["<Left>"], run = "leave" },   # left (up directory)
+  { on = ["<Down>"], run = "arrow 1" }, # down
+  { on = ["<Up>"], run = "arrow -1" },  # up
+  { on = ["<Right>"], run = "enter" },  # right (enter directory)
+
+  # Fast movement (5x) - matching nvim M/N/E/I
+  { on = ["M"], run = "leave" },    # fast left
+  { on = ["N"], run = "arrow 5" },  # fast down
+  { on = ["E"], run = "arrow -5" }, # fast up
+  { on = ["I"], run = "enter" },    # fast right
+
+  # Standard file operations
+  { on = ["<Space>"], run = ["toggle", "arrow 1"] },
+  { on = ["<Enter>"], run = "open" },
+  { on = ["q"], run = "quit" },
+  { on = ["Q"], run = "quit --no-cwd-file" },
+
+  # Search with / and navigate with s/S (matching nvim)
+  { on = ["/"], run = "find" },
+  { on = ["s"], run = "find_arrow" },
+  { on = ["S"], run = "find_arrow --previous" },
+
+  # File operations
+  { on = ["y"], run = "yank" },
+  { on = ["p"], run = "paste" },
+
+  { on = ["d"], run = "remove" },
+  { on = ["D"], run = "remove --permanently" },
+  { on = ["r"], run = "rename" },
+
+  # Create operations
+  { on = ["a"], run = "create" },
+  { on = ["A"], run = "create --dir" },
+
+  # Edit operations (k for edit since i is navigation)
+  { on = ["k"], run = "open --interactive" },
+
+  # Navigation shortcuts
+  { on = ["g", "h"], run = "cd ~" },
+  { on = ["g", "c"], run = "cd ~/.config" },
+  { on = ["g", "d"], run = "cd ~/Downloads" },
+  { on = ["g", "t"], run = "cd /tmp" },
+  { on = ["g", "r"], run = "cd /" },
+
+  # Zoxide integration  
+  { on = ["Z"], run = "plugin --sync zoxide" },
+
+  # Toggle operations
+  { on = ["."], run = "hidden toggle" }, # toggle hidden files
+  { on = ["w"], run = "linemode size" }, # toggle file sizes
+
+  # Sorting
+  { on = ["s", "s"], run = "sort alphabetical" },
+  { on = ["s", "t"], run = "sort modified" },
+  { on = ["s", "z"], run = "sort size" },
+
+  # Go to top/bottom
+  { on = ["g", "g"], run = "arrow -99999999" },
+  { on = ["G"], run = "arrow 99999999" },
+
+  # Clear selection and yank
+  { on = ["<Esc>"], run = ["escape --all", "unyank"] },
+
+  # Shell operations
+  { on = ["!"], run = "shell" },
+  { on = ["&"], run = "shell --block" },
+]
+
+[input]
+keymap = [
+  # Standard input navigation
+  { on = ["<Enter>"], run = "close --submit" },
+  { on = ["<Esc>"], run = "close" },
+  { on = ["<C-c>"], run = "close" },
+
+  # Text editing keys
+  { on = ["<Backspace>"], run = "backspace" },
+  { on = ["<Delete>"], run = "delete" },
+  { on = ["<C-h>"], run = "backspace" },
+
+  # Cursor movement
+  { on = ["<Left>"], run = "move -1" },
+  { on = ["<Right>"], run = "move 1" },
+  { on = ["<Home>"], run = "move -999" },
+  { on = ["<End>"], run = "move 999" },
+  { on = ["<C-a>"], run = "move -999" },
+  { on = ["<C-e>"], run = "move 999" },
+
+  # Word movement
+  { on = ["<C-b>"], run = "move -1" },
+  { on = ["<C-f>"], run = "move 1" },
+
+  # Delete operations
+  { on = ["<C-d>"], run = "delete" },
+  { on = ["<C-k>"], run = "kill" },
+  { on = ["<C-u>"], run = "kill --bol" },
+  { on = ["<C-w>"], run = "kill --backward-word" },
+]
+
+[completion]
+keymap = [
+  { on = [
+    "<Enter>",
+  ], run = "close" },
+  { on = [
+    "<Tab>",
+  ], run = "arrow 1" },
+  { on = [
+    "<S-Tab>",
+  ], run = "arrow -1" },
+  { on = [
+    "<Esc>",
+  ], run = "close" },
+]
+
+[help]
+keymap = [{ on = ["q"], run = "close" }, { on = ["<Esc>"], run = "close" }]

@@ -1,0 +1,74 @@
+# [Created by task 3.4.1 9/26/2025 10:31:36]
+data.location=/Users/knack/.task
+news.version=3.4.1
+
+# To use the default location of the XDG directories,
+# move this configuration file from ~/.taskrc to ~/.config/task/taskrc and update location config as follows:
+
+data.location=~/.local/share/task
+hooks.location=~/.config/task/hooks
+
+# Color theme (uncomment one to use)
+#include light-16.theme
+#include light-256.theme
+#include bubblegum-256.theme
+#include dark-16.theme
+include light-256.theme
+#include dark-red-256.theme
+#include dark-green-256.theme
+#include dark-blue-256.theme
+#include dark-violets-256.theme
+#include dark-yellow-green.theme
+#include dark-gray-256.theme
+#include dark-gray-blue-256.theme
+#include solarized-dark-256.theme
+#include solarized-light-256.theme
+#include no-color.theme
+
+default.command=minimal
+history.page=5
+urgency.waiting.coefficient=-4
+
+
+# Client comment system
+uda.client_comment.type=string
+uda.client_comment.label=Client Comment
+
+# Report for tasks with client comments
+report.client_comments.description=Tasks with client comments
+report.client_comments.columns=id,project,priority,description,client_comment
+report.client_comments.labels=ID,Project,Pri,Description,Client Comment
+report.client_comments.sort=urgency-
+report.client_comments.filter=client_comment.any:
+verbose=off
+urgency.user.tag.waiting.coefficient=-5
+uda.priority.values=U,H,M,,L
+urgency.uda.priority.U.coefficient=15.0
+uda.emailfrom.type=string
+uda.emailfrom.label=Email
+uda.namefrom.type=string
+uda.namefrom.label=From
+uda.messageid.type=string
+uda.messageid.label=Message ID
+uda.ackmessageid.type=string
+uda.ackmessageid.label=Ack Message ID
+journal.info=off
+
+# Custom "now" report excluding rainbird_apps and learning projects
+report.now.description=Next tasks excluding specified projects
+report.now.columns=id,start.age,depends,priority,project,tag,recur,scheduled.countdown,due.relative,until.remaining,description.count,urgency
+report.now.labels=ID,Active,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.now.sort=start-,urgency-
+report.now.filter=status:pending limit:page -project:rainbird_apps -project:learning
+uda.estimate.type=string
+uda.estimate.label=Estimate
+uda.category.type=string
+uda.category.label=Category
+uda.category.values=bugfix,feature,tweak,meeting,admin,research,documentation,testing,maintenance,optimization
+report.tnext.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,estimate,category,urgency
+report.tnext.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Est,Cat,Urg
+report.tnext.description=Next tasks with estimate and category
+report.tnext.filter=status:pending -WAITING limit:50
+report.tnext.sort=urgency+
+uda.ticketid.label=Ticket ID
+uda.ticketid.type=string

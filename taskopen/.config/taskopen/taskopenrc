@@ -1,0 +1,18 @@
+[General]
+EDITOR = nvim
+
+[Actions]
+# Action for markdown files (higher priority)
+markdown.regex = ".*\\.md$"
+markdown.command = "nvim \"$FILE\""
+markdown.modes = "normal,any,batch"
+
+# Action for other files (excluding .md)
+files.regex = "^[\\.\\/~]+.*\\.(txt|pdf|doc|docx|xls|xlsx|png|jpg|gif|html|csv)$"
+files.command = "open $FILE"
+files.modes = "batch,any,normal"
+
+# Action for Notes annotations
+notes.regex = "Notes"
+notes.command = "$HOME/.config/taskopen/create-note.sh"
+notes.modes = "normal,any,batch"

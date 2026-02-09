@@ -1,0 +1,6 @@
+--glob=!Library/Containers/**
+--glob=!Library/Caches/**
+--glob=!Library/Application Support/**
+--glob=!Library/CloudStorage/**
+--glob=!.Trash/**
+--glob=!.cache/**

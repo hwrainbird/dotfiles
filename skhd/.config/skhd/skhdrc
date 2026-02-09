@@ -1,0 +1,122 @@
+ ctrl + alt - m : /usr/bin/osascript ~/bin/vivaldi-move-tab-next.applescript
+
+## send window to monitor and follow focus
+hyper - p : /Users/knack/CustomScripts/SwitchSpaces/moveWindowLeftAndFollowFocus.sh
+hyper - u : /Users/knack/CustomScripts/SwitchSpaces/moveWindowRightAndFollowFocus.sh
+
+# Focus using mnei (unified navigation scheme)
+meh - m : /opt/homebrew/bin/yabai -m window --focus west
+meh - n : /opt/homebrew/bin/yabai -m window --focus south
+meh - e : /opt/homebrew/bin/yabai -m window --focus north
+meh - i : /opt/homebrew/bin/yabai -m window --focus east
+
+# Focus using arrow keys
+meh - left : /opt/homebrew/bin/yabai -m window --focus west
+meh - down : /opt/homebrew/bin/yabai -m window --focus south
+meh - up : /opt/homebrew/bin/yabai -m window --focus north
+meh - right : /opt/homebrew/bin/yabai -m window --focus east
+
+# Display focus toggle (two monitors)
+meh - space : sh -c '/opt/homebrew/bin/yabai -m display --focus west || /opt/homebrew/bin/yabai -m display --focus east'
+
+# Toggle: move window to the other display and follow
+hyper - v : sh -c '/opt/homebrew/bin/yabai -m window --display west && /opt/homebrew/bin/yabai -m display --focus west || { /opt/homebrew/bin/yabai -m window --display east && /opt/homebrew/bin/yabai -m display --focus east; }'
+
+# Move window to space N and follow (HYPER)
+hyper - 1      : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window | jq -r .id) && /opt/homebrew/bin/yabai -m window --space 1 && /opt/homebrew/bin/yabai -m space --focus 1 && /opt/homebrew/bin/yabai -m window --focus $win_id --mouse'
+hyper - 2      : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window | jq -r .id) && /opt/homebrew/bin/yabai -m window --space 2 && /opt/homebrew/bin/yabai -m space --focus 2 && /opt/homebrew/bin/yabai -m window --focus $win_id --mouse'
+hyper - 3      : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window | jq -r .id) && /opt/homebrew/bin/yabai -m window --space 3 && /opt/homebrew/bin/yabai -m space --focus 3 && /opt/homebrew/bin/yabai -m window --focus $win_id --mouse'
+hyper - 4  : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window | jq -r .id) && /opt/homebrew/bin/yabai -m window --space 4 && /opt/homebrew/bin/yabai -m space --focus 4 && /opt/homebrew/bin/yabai -m window --focus $win_id --mouse'
+hyper - 5 : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window | jq -r .id) && /opt/homebrew/bin/yabai -m window --space 5 && /opt/homebrew/bin/yabai -m space --focus 5 && /opt/homebrew/bin/yabai -m window --focus $win_id --mouse'
+hyper - 6 : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window | jq -r .id) && /opt/homebrew/bin/yabai -m window --space 6 && /opt/homebrew/bin/yabai -m space --focus 6 && /opt/homebrew/bin/yabai -m window --focus $win_id --mouse'
+
+# Layout / State (unique keys only)
+meh - l : sh -c '/opt/homebrew/bin/yabai -m space --rotate 270'
+meh - v : sh -c '/opt/homebrew/bin/yabai -m space --mirror y-axis'
+meh - o : sh -c '/opt/homebrew/bin/yabai -m space --mirror x-axis'
+meh - t : sh -c '/opt/homebrew/bin/yabai -m window --toggle float; /opt/homebrew/bin/yabai -m window --grid 4:4:1:1:2:2'
+meh - f : sh -c '/opt/homebrew/bin/yabai -m window --toggle zoom-fullscreen'
+meh - b : sh -c '/opt/homebrew/bin/yabai -m space --balance'
+
+hyper - b : yabai -m space --layout bsp
+
+# Tab Navigation (mnei scheme - top row for tabs)
+meh - j : echo "Previous tab - configure in each app"
+meh - y : echo "Next tab - configure in each app"
+
+
+# Window movement mode - enter with meh+h
+:: move_mode @ : echo "Move mode: m/n/e/i to warp window"
+meh - h ; move_mode
+
+# Move mode bindings
+move_mode < m : /opt/homebrew/bin/yabai -m window --warp west; skhd -k "escape"
+move_mode < n : /opt/homebrew/bin/yabai -m window --warp south; skhd -k "escape" 
+move_mode < e : /opt/homebrew/bin/yabai -m window --warp north; skhd -k "escape"
+move_mode < i : /opt/homebrew/bin/yabai -m window --warp east; skhd -k "escape"
+move_mode < escape ; default
+
+# Window resizing mode - enter with meh+z
+:: resize_mode @ : echo "Resize mode: m/n/e/i to resize window"
+meh - z ; resize_mode
+
+# Resize mode bindings
+resize_mode < m : /opt/homebrew/bin/yabai -m window --resize left:-150:0; skhd -k "escape"
+resize_mode < n : /opt/homebrew/bin/yabai -m window --resize bottom:0:150; skhd -k "escape"
+resize_mode < e : /opt/homebrew/bin/yabai -m window --resize top:0:-150; skhd -k "escape"
+resize_mode < i : /opt/homebrew/bin/yabai -m window --resize right:150:0; skhd -k "escape"
+resize_mode < escape ; default
+
+# Window warping mode - enter with meh+w
+:: warp_mode @ : echo "Warp mode: m/n/e/i to warp window"
+meh - w ; warp_mode
+
+# Warp mode bindings (same as move for now)
+warp_mode < m : /opt/homebrew/bin/yabai -m window --warp west; skhd -k "escape"
+warp_mode < n : /opt/homebrew/bin/yabai -m window --warp south; skhd -k "escape" 
+warp_mode < e : /opt/homebrew/bin/yabai -m window --warp north; skhd -k "escape"
+warp_mode < i : /opt/homebrew/bin/yabai -m window --warp east; skhd -k "escape"
+warp_mode < escape ; default
+
+# Window insert mode - enter with meh+p
+:: insert_mode @ : echo "Insert mode: i=right, n=down"
+meh - p ; insert_mode
+
+# Insert mode bindings
+insert_mode < r : /opt/homebrew/bin/yabai -m window --insert east; skhd -k "escape"
+insert_mode < d : /opt/homebrew/bin/yabai -m window --insert south; skhd -k "escape"
+insert_mode < escape ; default
+
+# Music mode - enter with meh+z
+:: music_mode @ : echo "Music mode: a-z to navigate playlist"
+meh - x ; music_mode
+
+# Music mode bindings - using script for navigation
+music_mode < a : nohup /Users/knack/bin/midi-instrument-selector a > /dev/null 2>&1 & skhd -k "escape"
+music_mode < b : /Users/knack/bin/midi-instrument-selector b
+music_mode < c : /Users/knack/bin/midi-instrument-selector c
+music_mode < d : /Users/knack/bin/midi-instrument-selector d
+music_mode < e : /Users/knack/bin/midi-instrument-selector e
+music_mode < f : /Users/knack/bin/midi-instrument-selector f
+music_mode < g : /Users/knack/bin/midi-instrument-selector g
+music_mode < h : /Users/knack/bin/midi-instrument-selector h
+music_mode < i : /Users/knack/bin/midi-instrument-selector i
+music_mode < j : /Users/knack/bin/midi-instrument-selector j
+music_mode < k : /Users/knack/bin/midi-instrument-selector k
+music_mode < l : /Users/knack/bin/midi-instrument-selector l
+music_mode < m : /Users/knack/bin/midi-instrument-selector m
+music_mode < n : /Users/knack/bin/midi-instrument-selector n
+music_mode < o : /Users/knack/bin/midi-instrument-selector o
+music_mode < p : /Users/knack/bin/midi-instrument-selector p
+music_mode < q : /Users/knack/bin/midi-instrument-selector q
+music_mode < r : /Users/knack/bin/midi-instrument-selector r
+music_mode < s : /Users/knack/bin/midi-instrument-selector s
+music_mode < t : /Users/knack/bin/midi-instrument-selector t
+music_mode < u : /Users/knack/bin/midi-instrument-selector u
+music_mode < v : /Users/knack/bin/midi-instrument-selector v
+music_mode < w : /Users/knack/bin/midi-instrument-selector w
+music_mode < x : /Users/knack/bin/midi-instrument-selector x
+music_mode < y : /Users/knack/bin/midi-instrument-selector y
+music_mode < z : /Users/knack/bin/midi-instrument-selector z
+
+music_mode < escape ; default

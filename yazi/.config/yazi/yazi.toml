@@ -1,0 +1,66 @@
+# Yazi configuration
+
+[mgr]
+# Show hidden files by default (false to hide)
+show_hidden = false
+# Sort by name initially
+sort_by = "alphabetical"
+# Show file icons
+show_icons = true
+# Line mode (shows file details)
+linemode = "size"
+
+[preview]
+# Enable previews
+tab_size = 4
+max_width = 600
+max_height = 900
+
+[opener]
+# Set nvim as default editor
+edit = [
+  { run = 'nvim "$@"', block = true, for = "unix" },
+]
+
+# Text files
+text = [
+  { run = 'nvim "$@"', block = true, desc = "Edit with nvim" },
+]
+
+# Archive files
+archive = [
+  { run = 'unar "$1"', desc = "Extract here" },
+]
+
+# Images
+image = [
+  { run = 'open "$@"', desc = "Open with default app" },
+]
+
+# Videos
+video = [
+  { run = 'open "$@"', desc = "Open with default app" },
+]
+
+# PDFs
+pdf = [
+  { run = 'open "$@"', desc = "Open with default app" },
+]
+
+[open]
+# File type associations
+rules = [
+  { name = "*/", use = "edit" },
+  { mime = "text/*", use = "text" },
+  { mime = "image/*", use = "image" },
+  { mime = "video/*", use = "video" },
+  { mime = "application/pdf", use = "pdf" },
+  { mime = "application/*zip", use = "archive" },
+  { mime = "application/x-tar", use = "archive" },
+  { mime = "application/x-bzip*", use = "archive" },
+  { mime = "application/x-7z*", use = "archive" },
+]
+
+[log]
+# Enable logging
+enabled = true
