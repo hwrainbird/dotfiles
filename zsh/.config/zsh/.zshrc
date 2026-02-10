@@ -9,6 +9,8 @@ export NPM_CONFIG_CACHE="$HOME/.cache/npm"
 export ANDROID_HOME="$HOME/.local/share/android"
 export EDITOR="nvim"
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+export RAILWAY_CONFIG_DIR="$HOME/.config/railway"
+export MBSYNCRC="$HOME/.config/mbsync/mbsyncrc"
 
 # XDG environment variables for applications
 export NOTMUCH_CONFIG="$HOME/.config/notmuch/notmuchrc"
@@ -57,8 +59,9 @@ bindkey -M vicmd 'k' vi-insert
 bindkey -M vicmd 'K' vi-insert-bol
 
 # Text objects - inner mappings for vi motions
-bindkey -M vicmd 'ik' select-in-shell-word  # inner word (like iw)
-bindkey -M vicmd 'ak' select-a-shell-word   # around word (like aw)
+bindkey -M vicmd 'kw' select-in-shell-word   # inner word (k = i in Colemak)
+bindkey -M vicmd 'aw' select-a-shell-word    # around word
+
 
 # End of word (h = e in Colemak)
 bindkey -M vicmd 'h' vi-forward-word-end

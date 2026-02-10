@@ -4,3 +4,4 @@
 --glob=!Library/CloudStorage/**
 --glob=!.Trash/**
 --glob=!.cache/**
+--glob=!Library/Group Containers/**

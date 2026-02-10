@@ -1,0 +1,22 @@
+IMAPAccount fastmail
+Host imap.fastmail.com
+User harry@rainbird.app
+PassCmd "pass show email/fastmail-imap"
+AuthMechs LOGIN
+TLSType IMAPS
+
+IMAPStore fastmail-remote
+Account fastmail
+
+MaildirStore fastmail-local
+SubFolders Verbatim
+Path ~/mail/fastmail/
+Inbox ~/mail/fastmail/Inbox
+
+Channel fastmail
+Far :fastmail-remote:
+Near :fastmail-local:
+Patterns *
+Create Both
+Expunge Both
+SyncState *

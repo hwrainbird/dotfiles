@@ -87,6 +87,12 @@ map({ "n", "t" }, "<A-n>", "<C-w>j", { desc = "Move to lower window" })
 map({ "n", "t" }, "<A-e>", "<C-w>k", { desc = "Move to upper window" })
 map({ "n", "t" }, "<A-i>", "<C-w>l", { desc = "Move to right window" })
 
+-- Arrow key window navigation
+map("n", "<leader><Left>", "<C-w>h", { desc = "Move to left window" })
+map("n", "<leader><Down>", "<C-w>j", { desc = "Move to lower window" })
+map("n", "<leader><Up>", "<C-w>k", { desc = "Move to upper window" })
+map("n", "<leader><Right>", "<C-w>l", { desc = "Move to right window" })
+
 -- Use s/S for search navigation (unified across all apps)
 map("n", "s", "n", { desc = "Next search result" })
 map("n", "S", "N", { desc = "Previous search result" })
@@ -169,3 +175,4 @@ map("n", "<leader>tt", function()
 end, { desc = "Terminal in current directory" })
 
 vim.keymap.set("n", "<leader>t", "", { desc = "+terminal/task" })
+

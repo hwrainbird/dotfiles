@@ -1,0 +1,22 @@
+# Account settings
+set realname = "Harry Rainbird"
+set from = "harry@rainbird.app"
+
+# IMAP settings (FastMail)
+set imap_user = "harry@rainbird.app"
+set imap_pass = `pass show email/fastmail-imap`
+set folder = "imaps://imap.fastmail.com:993/"
+set nm_default_url = "notmuch:///Users/knack/Mail"
+set spoolfile = "notmuch://?query=NOT tag:actioned"
+set postponed = "+Drafts"
+
+# SMTP settings (FastMail)
+set smtp_url = "smtps://harry@rainbird.app@smtp.fastmail.com:465/"
+set smtp_pass = `pass show email/fastmail-imap`
+
+# Local mail
+set mbox_type = Maildir
+set record = "+Sent"
+
+# Signature
+set signature = ""
