@@ -6,3 +6,5 @@
 [user]
 	name = hwrainbird
 	email = 140379782+hwrainbird@users.noreply.github.com
+[core]
+	hooksPath = /Users/knack/.config/git/hooks
