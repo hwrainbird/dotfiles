@@ -11,6 +11,7 @@ export EDITOR="nvim"
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 export RAILWAY_CONFIG_DIR="$HOME/.config/railway"
 export MBSYNCRC="$HOME/.config/mbsync/mbsyncrc"
+[[ -f "$ZDOTDIR/secrets.zsh" ]] && source "$ZDOTDIR/secrets.zsh"
 
 # XDG environment variables for applications
 export NOTMUCH_CONFIG="$HOME/.config/notmuch/notmuchrc"
@@ -122,7 +123,6 @@ task() {
     fi
 }
 
-alias knackserver='node ~/AppDev/Lib/KTL/NodeJS/NodeJS_FileServer.js &'
 export PATH="$HOME/.local/bin:$PATH"
 alias topen="taskopen --include=markdown"
 
@@ -143,7 +143,7 @@ tsummary() {
 # Workflow documentation
 alias workflow-guide="nvim ~/WORKFLOW_GUIDE.md"
 alias workflow-view="nb show rainbird_apps:2 | glow"
-alias knackserver="node /Users/knack/app_dev/Lib/KTL/NodeJS/NodeJS_FileServer.js"
+alias knackserver="node $HOME/app_dev/Lib/KTL/NodeJS/NodeJS_FileServer.js $HOME/app_dev"
 alias rsync="rsync --exclude-from=/Users/knack/.rsync-exclude"
 alias cdf="cd \$(find . -type d | fzf)"
 alias cdf="cd \"\$(find . -type d | fzf)\""

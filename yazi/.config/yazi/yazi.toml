@@ -27,6 +27,16 @@ text = [
   { run = 'nvim "$@"', block = true, desc = "Edit with nvim" },
 ]
 
+# JSON → nvim
+json = [
+  { run = 'nvim "$@"', block = true, desc = "Edit with nvim" },
+]
+
+# CSV → Excel
+csv = [
+  { run = 'open -a "Microsoft Excel" "$@"', desc = "Open with Excel" },
+]
+
 # Archive files
 archive = [
   { run = 'unar "$1"', desc = "Extract here" },
@@ -51,6 +61,10 @@ pdf = [
 # File type associations
 rules = [
   { name = "*/", use = "edit" },
+  { name = "*.json", use = "json" },
+  { name = "*.csv", use = "csv" },
+  { mime = "text/csv", use = "csv" },
+  { mime = "application/json", use = "json" },
   { mime = "text/*", use = "text" },
   { mime = "image/*", use = "image" },
   { mime = "video/*", use = "video" },

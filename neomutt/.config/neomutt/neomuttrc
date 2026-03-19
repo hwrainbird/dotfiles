@@ -11,7 +11,8 @@ set spoolfile = "notmuch://?query=NOT tag:actioned"
 set postponed = "+Drafts"
 
 # SMTP settings (FastMail)
-set smtp_url = "smtps://harry@rainbird.app@smtp.fastmail.com:465/"
+set smtp_url = "smtps://harry%40rainbird.app@smtp.fastmail.com:465/"
+set smtp_authenticators = "login"
 set smtp_pass = `pass show email/fastmail-imap`
 
 # Local mail
@@ -20,3 +21,5 @@ set record = "+Sent"
 
 # Signature
 set signature = ""
+
+source ~/bin/neomutt-workflow.rc

@@ -64,11 +64,30 @@ uda.estimate.type=string
 uda.estimate.label=Estimate
 uda.category.type=string
 uda.category.label=Category
-uda.category.values=bugfix,feature,tweak,meeting,admin,research,documentation,testing,maintenance,optimization
-report.tnext.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,estimate,category,urgency
-report.tnext.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Est,Cat,Urg
+uda.category.values=bugfix,feature,tweak,meeting,admin,research,documentation,testing,maintenance,optimization,scoping,imports
+report.tnext.columns=id,priority,project,tags,due.relative,description.count,estimate,tracked,category,urgency
+report.tnext.labels=ID,P,Project,Tag,Due,Description,Est,Tracked,Cat,Urg
 report.tnext.description=Next tasks with estimate and category
 report.tnext.filter=status:pending -WAITING limit:50
 report.tnext.sort=urgency+
 uda.ticketid.label=Ticket ID
 uda.ticketid.type=string
+uda.tracked.label=Tracked
+uda.tracked.type=string
+
+
+# Color precedence (highest last): due < priorities < waiting < due.today < overdue
+rule.precedence.color=deleted,completed,active,keyword.,project.,blocked,blocking,recurring,tagged,scheduled,due,uda.,tag.,due.today,overdue
+
+# Catppuccin Latte color scheme
+color.active=rgb005 on rgb445
+color.due=rgb330 on rgb554
+color.due.today=rgb500 on rgb553
+color.overdue=rgb500 on rgb544
+color.tag.new=rgb004 on rgb445
+color.tag.waiting=gray14 on gray23
+color.alternate=on gray23
+color.uda.priority.U=rgb500 on rgb544
+color.uda.priority.H=bold
+color.uda.priority.M=rgb004
+color.uda.priority.L=gray14
