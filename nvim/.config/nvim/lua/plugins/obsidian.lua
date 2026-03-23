@@ -48,15 +48,6 @@ return {
         min_chars = 2,
       },
 
-      -- Daily note configuration to match bin/note command
-      daily_notes = {
-        folder = "daily",
-        date_format = "%a %b %eth %Y", -- Format: Sat Nov 29th 2025
-        alias_format = "%B %-d, %Y",
-        default_tags = { "daily" },
-        template = "reference/Daily Note Template.md",
-      },
-
       -- Optional, configure key mappings. These are the defaults. If you don't want to set any keymappings this
       -- way then set 'mappings = {}'.
       mappings = {

@@ -37,6 +37,11 @@ csv = [
   { run = 'open -a "Microsoft Excel" "$@"', desc = "Open with Excel" },
 ]
 
+# Word documents → Word (Linux: use xdg-open or libreoffice --writer)
+word = [
+  { run = 'open -a "Microsoft Word" "$@"', desc = "Open with Word" },
+]
+
 # Archive files
 archive = [
   { run = 'unar "$1"', desc = "Extract here" },
@@ -62,6 +67,7 @@ pdf = [
 rules = [
   { name = "*/", use = "edit" },
   { name = "*.json", use = "json" },
+  { name = "*.docx", use = "word" },
   { name = "*.csv", use = "csv" },
   { mime = "text/csv", use = "csv" },
   { mime = "application/json", use = "json" },
