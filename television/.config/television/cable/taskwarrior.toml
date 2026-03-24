@@ -1,0 +1,23 @@
+
+[metadata]
+name = "task"
+description = "A channel to select task warrior tasks"
+requirements = ["taskwarrior"]
+
+[source]
+command = ["task rc.verbose=nothing tvnext", "task rc.verbose=nothing tvall"]
+
+ainsi=true
+
+[preview]
+command = "echo '{}' | awk '{print $1}' | xargs task info"
+
+[keybindings]
+shortcut = "f6"
+enter = "actions:work-start"
+
+[actions.work-start]
+description = "Run work start command on task"
+command = "echo '{}' | awk '{print $1}' | xargs -I% work % start"
+mode = "execute"
+

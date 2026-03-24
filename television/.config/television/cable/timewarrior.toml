@@ -1,0 +1,21 @@
+[metadata]
+name = "timew"
+description = "Browse and manage timewarrior entries"
+requirements = ["timew", "jq"]
+
+[source]
+command = [
+  "timew export :week | jq -r 'sort_by(.start) | reverse | .[] | \"@\\(.id)  \\(.start[0:4])-\\(.start[4:6])-\\(.start[6:8])  \\(.start[9:11]):\\(.start[11:13])-\\(if .end then (.end[9:11]+\":\"+.end[11:13]) else \"now  \" end)  \\(.tags[0] // \"\")  \\(.tags | map(select(startswith(\"title:\"))) | .[0] // \"\" | ltrimstr(\"title:\"))\"'",
+  "timew export :month | jq -r 'sort_by(.start) | reverse | .[] | \"@\\(.id)  \\(.start[0:4])-\\(.start[4:6])-\\(.start[6:8])  \\(.start[9:11]):\\(.start[11:13])-\\(if .end then (.end[9:11]+\":\"+.end[11:13]) else \"now  \" end)  \\(.tags[0] // \"\")  \\(.tags | map(select(startswith(\"title:\"))) | .[0] // \"\" | ltrimstr(\"title:\"))\"'",
+]
+
+[preview]
+command = "echo '{}' | awk '{print $1}' | tr -d '@' | xargs -I% sh -c 'timew export | jq \".[] | select(.id == %)\"'"
+
+[keybindings]
+shortcut = "f7"
+
+[actions.delete]
+description = "Delete time entry"
+command = "echo '{}' | awk '{print $1}' | xargs -I% timew delete %"
+mode = "execute"

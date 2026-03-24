@@ -1,0 +1,18 @@
+[metadata]
+name = "zellij"
+description = "A channel to select zellij sessions"
+requirements = ["zellij"]
+
+[source]
+command = ["zellij list-sessions"]
+ansi = true
+
+[keybindings]
+shortcut = "f5"
+enter = "actions:attach"
+
+[actions.attach]
+description = "Attach to selected zellij session"
+command = "zellij attach '{strip_ansi|split: :0}'"
+mode = "execute"
+

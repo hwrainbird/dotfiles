@@ -1,0 +1,23 @@
+[metadata]
+name = "recent"
+description = "List recently modified files (via git or filesystem)"
+requirements = ["fd", "bat"]
+
+[source]
+command = [
+  "{ fd . $HOME --type f --changed-within 1h --exclude Library --exclude .Trash --exclude node_modules -0; fd . $HOME/.config $HOME/dotfiles --type f --changed-within 1h -0; } | xargs -0 ls -1t 2>/dev/null",
+  "{ fd . $HOME --type f --changed-within 1d --exclude Library --exclude .Trash --exclude node_modules --max-results 200 -0; fd . $HOME/.config $HOME/dotfiles --type f --changed-within 1d --max-results 50 -0; } | xargs -0 ls -1t 2>/dev/null",
+]
+
+[preview]
+command = "bat -n --color=always '{}'"
+env = { BAT_THEME = "ansi" }
+
+[keybindings]
+enter = "actions:edit"
+
+[actions.edit]
+description = "Open the selected file in editor"
+command = "${EDITOR:-vim} '{}'"
+shell = "bash"
+mode = "execute"
