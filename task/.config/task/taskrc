@@ -75,6 +75,14 @@ uda.ticketid.type=string
 uda.tracked.label=Tracked
 uda.tracked.type=string
 
+# Custom report that will work well with television
+report.tvnext.columns=uuid.short,status.short,priority,project,description.count
+report.tvnext.filter=status:pending project.not:rainbird_apps project.not:learning
+report.tvnext.sort=urgency-
+report.tvall.columns=uuid.short,status.short,priority,project,description.count
+report.tvall.filter=project.not:rainbird_apps project.not:learning
+report.tvall.sort=entry-
+
 
 # Color precedence (highest last): due < priorities < waiting < due.today < overdue
 rule.precedence.color=deleted,completed,active,keyword.,project.,blocked,blocking,recurring,tagged,scheduled,due,uda.,tag.,due.today,overdue
