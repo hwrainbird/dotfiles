@@ -15,4 +15,3 @@ enter = "actions:attach"
 description = "Attach to selected zellij session"
 command = "zellij attach '{strip_ansi|split: :0}'"
 mode = "execute"
-
