@@ -22,6 +22,9 @@ meh - space : sh -c '/opt/homebrew/bin/yabai -m display --focus west || /opt/hom
 # Toggle: move window to the other display and follow
 hyper - v : sh -c '/opt/homebrew/bin/yabai -m window --display west && /opt/homebrew/bin/yabai -m display --focus west || { /opt/homebrew/bin/yabai -m window --display east && /opt/homebrew/bin/yabai -m display --focus east; }'
 
+# Move focused window to other display and follow (vim-inspired shortcut)
+hyper - space : sh -c '/opt/homebrew/bin/yabai -m window --display west && /opt/homebrew/bin/yabai -m display --focus west || { /opt/homebrew/bin/yabai -m window --display east && /opt/homebrew/bin/yabai -m display --focus east; }'
+
 # Move window to space N and follow (HYPER)
 hyper - 1      : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window | jq -r .id) && /opt/homebrew/bin/yabai -m window --space 1 && /opt/homebrew/bin/yabai -m space --focus 1 && /opt/homebrew/bin/yabai -m window --focus $win_id --mouse'
 hyper - 2      : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window | jq -r .id) && /opt/homebrew/bin/yabai -m window --space 2 && /opt/homebrew/bin/yabai -m space --focus 2 && /opt/homebrew/bin/yabai -m window --focus $win_id --mouse'
