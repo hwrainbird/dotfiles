@@ -37,6 +37,11 @@ csv = [
   { run = 'open -a "Microsoft Excel" "$@"', desc = "Open with Excel" },
 ]
 
+# Excel files → Excel (Linux: use libreoffice --calc)
+excel = [
+  { run = 'open -a "Microsoft Excel" "$@"', desc = "Open with Excel" },
+]
+
 # Word documents → Word (Linux: use xdg-open or libreoffice --writer)
 word = [
   { run = 'open -a "Microsoft Word" "$@"', desc = "Open with Word" },
@@ -69,7 +74,11 @@ rules = [
   { name = "*.json", use = "json" },
   { name = "*.docx", use = "word" },
   { name = "*.csv", use = "csv" },
+  { name = "*.xlsx", use = "excel" },
+  { name = "*.xls", use = "excel" },
   { mime = "text/csv", use = "csv" },
+  { mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", use = "excel" },
+  { mime = "application/vnd.ms-excel", use = "excel" },
   { mime = "application/json", use = "json" },
   { mime = "text/*", use = "text" },
   { mime = "image/*", use = "image" },
