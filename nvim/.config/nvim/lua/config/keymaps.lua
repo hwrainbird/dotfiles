@@ -176,3 +176,13 @@ end, { desc = "Terminal in current directory" })
 
 vim.keymap.set("n", "<leader>t", "", { desc = "+terminal/task" })
 
+-- ==================== npm Commands ====================
+-- npm commands with terminal
+map("n", "<leader>nb", function()
+  Snacks.terminal.open({"npm", "run", "build"}, { cwd = vim.fn.getcwd() })
+end, { desc = "npm run build" })
+
+map("n", "<leader>nd", function()
+  Snacks.terminal.open({"npm", "run", "deploy"}, { cwd = vim.fn.getcwd() })
+end, { desc = "npm run deploy" })
+
