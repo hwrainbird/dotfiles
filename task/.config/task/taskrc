@@ -28,6 +28,9 @@ include light-256.theme
 default.command=minimal
 history.page=5
 urgency.waiting.coefficient=-4
+urgency.age.coefficient=15.0
+urgency.user.tag.waiting.coefficient=-2.0
+urgency.uda.priority.U.coefficient=15.0
 
 
 # Client comment system
@@ -41,9 +44,7 @@ report.client_comments.labels=ID,Project,Pri,Description,Client Comment
 report.client_comments.sort=urgency-
 report.client_comments.filter=client_comment.any:
 verbose=off
-urgency.user.tag.waiting.coefficient=-5
 uda.priority.values=U,H,M,,L
-urgency.uda.priority.U.coefficient=15.0
 uda.emailfrom.type=string
 uda.emailfrom.label=Email
 uda.namefrom.type=string
@@ -68,7 +69,7 @@ uda.category.values=bugfix,feature,tweak,meeting,admin,research,documentation,te
 report.tnext.columns=id,priority,project,tags,due.relative,description.count,estimate,tracked,category,urgency
 report.tnext.labels=ID,P,Project,Tag,Due,Description,Est,Tracked,Cat,Urg
 report.tnext.description=Next tasks with estimate and category
-report.tnext.filter=status:pending -WAITING limit:50
+report.tnext.filter=status:pending -WAITING
 report.tnext.sort=urgency+
 uda.ticketid.label=Ticket ID
 uda.ticketid.type=string
@@ -81,7 +82,7 @@ report.tvnext.filter=status:pending project.not:rainbird_apps project.not:learni
 report.tvnext.sort=urgency-
 report.tvall.columns=uuid.short,status.short,priority,project,description.count
 report.tvall.filter=project.not:rainbird_apps project.not:learning
-report.tvall.sort=entry-
+report.tvall.sort=created-
 
 
 # Color precedence (highest last): due < priorities < waiting < due.today < overdue
@@ -92,10 +93,18 @@ color.active=rgb005 on rgb445
 color.due=rgb330 on rgb554
 color.due.today=rgb500 on rgb553
 color.overdue=rgb500 on rgb544
-color.tag.new=rgb004 on rgb445
+color.tag.new=bold rgb000 on rgb140
 color.tag.waiting=gray14 on gray23
 color.alternate=on gray23
 color.uda.priority.U=rgb500 on rgb544
 color.uda.priority.H=bold
 color.uda.priority.M=rgb004
 color.uda.priority.L=gray14
+
+# Boost urgency so +new tasks sort to the bottom of the tnext report
+# (which sorts urgency ascending). Coefficient is tuned so new tasks land
+# at the bottom of the visible list, not off-screen of limit:50.
+# Note: `urgency.user.tag.<tag>.coefficient` is the correct syntax for
+# user-defined tag urgency (not `urgency.tag.<tag>.coefficient`).
+# Cleared by `work eod` at the end of day, so new-only visibility is automatic.
+urgency.user.tag.new.coefficient=10.0
