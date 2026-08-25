@@ -3,6 +3,7 @@ echo "✅ Yabai config loaded at $(date)" >>~/yabai-load.log
 
 yabai -m rule --add app="CleanShot X" manage=off
 yabai -m rule --add app="EyeBreak" manage=off
+yabai -m rule --add app="^Raycast$" manage=off
 
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
@@ -33,8 +34,6 @@ yabai -m config active_window_opacity 1.0
 
 ## some other settings
 yabai -m config split_ratio 0.50
-# # set mouse interaction modifier key (default: fn)
-yabai -m config mouse_modifier ctrl
 # set modifier + right-click drag to resize window (default: resize)
 yabai -m config mouse_action2 resize
 # set modifier + left-click drag to resize window (default: move)
@@ -50,12 +49,6 @@ yabai -m config bottom_padding 2
 yabai -m config left_padding 2
 yabai -m config right_padding 2
 
-# Mouse behavior
-yabai -m config mouse_follows_focus on
-yabai -m config mouse_modifier ctrl
-yabai -m config mouse_action1 move
-yabai -m config mouse_action2 resize
-
 # Scratchpad configuration
 yabai -m config scratchpad_border on
 
@@ -63,3 +56,11 @@ yabai -m config scratchpad_border on
 yabai -m rule --add app="System Settings" sticky=on manage=off
 
 borders active_color=0xff00ff00 inactive_color=0x00000000 width=7.0 &
+
+# Keep the pointer on the focused display (for warpd hint mode).
+# The script is a no-op unless focus actually crosses to another display, so
+# mouse_follows_focus stays off (it broke Raycast clipboard paste).
+WARP=$HOME/bin/window_management/warp-pointer-to-focus.sh
+yabai -m signal --add event=display_changed label=warp_display action="$WARP display_changed"
+yabai -m signal --add event=window_focused label=warp_window action="$WARP window_focused"
+yabai -m signal --add event=space_changed label=warp_space action="$WARP space_changed"
