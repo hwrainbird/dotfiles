@@ -1,0 +1,21 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # gitleaks needs full history
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install
+      - name: Build
+        run: npm run build
+      # Formatting is enforced locally (the .hooks/pre-commit Biome pass on staged
+      # files). Once the whole codebase is Biome-formatted, add a hard CI gate:
+      #   - run: npx @biomejs/biome ci .

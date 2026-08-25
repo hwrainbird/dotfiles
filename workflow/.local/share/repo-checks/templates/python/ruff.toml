@@ -1,0 +1,13 @@
+# Standalone ruff config so the stamp tool never has to edit an existing
+# pyproject.toml. Delete this and move the settings under [tool.ruff] in
+# pyproject.toml if you prefer a single config file.
+target-version = "py312"
+line-length = 120
+
+[lint]
+# Conservative to start — ratchet up later:
+#   E/F pycodestyle+pyflakes · I import sort · B bugbear · UP pyupgrade
+select = ["E", "F", "I", "B", "UP"]
+# ruff-format already wraps code to line-length; E501 then only nags about
+# unsplittable strings/URLs, so leave it to the formatter.
+ignore = ["E501"]

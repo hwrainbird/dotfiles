@@ -1,0 +1,16 @@
+#!/bin/sh
+# Dispatched by the global hook (~/.config/git/hooks/pre-commit).
+# Secrets are scanned globally. Here: format staged web files with Biome,
+# re-stage them, then verify the build. Requires Biome as a devDependency.
+set -e
+
+staged=$(git diff --cached --name-only --diff-filter=ACM -- \
+  '*.js' '*.jsx' '*.mjs' '*.cjs' '*.ts' '*.tsx' '*.json' '*.css' \
+  | grep -vE '(^|/)package-lock\.json$' || true)
+
+if [ -n "$staged" ]; then
+  printf '%s\n' "$staged" | xargs npx --no-install @biomejs/biome format --write
+  printf '%s\n' "$staged" | xargs git add
+fi
+
+npm run build

@@ -1,0 +1,4 @@
+#!/bin/sh
+# Dispatched by the global hook (~/.config/git/hooks/pre-commit).
+# Secrets are scanned globally; here we lint/format staged files with ruff.
+pre-commit run --config .pre-commit-config.yaml

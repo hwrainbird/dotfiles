@@ -1,0 +1,10 @@
+# Local lint/format gate, dispatched from the global hook via .hooks/pre-commit.
+# Secret scanning is already global (gitleaks) — not repeated here.
+# Run `pre-commit autoupdate` after stamping to pin the current ruff release.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.21
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
