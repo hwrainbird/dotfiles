@@ -1,0 +1,7 @@
+# Runtime state managed by herdr itself
+*.log
+*.sock
+session.json
+
+# Plugin lockfile is auto-managed
+.plugins.lock

@@ -1,0 +1,9 @@
+[theme]
+# Match WezTerm: switches between Catppuccin Mocha and Catppuccin Latte
+# based on host terminal appearance (OSC 2031 / luminance inference).
+auto_switch = true
+dark_name = "catppuccin"
+light_name = "catppuccin-latte"
+
+[ui]
+agent_panel_sort = "spaces"
