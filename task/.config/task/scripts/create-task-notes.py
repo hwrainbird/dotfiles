@@ -26,8 +26,6 @@ def load_template():
 ## Attachments
 
 ## Action Items
-- [ ] Review task details
-- [ ] Update task status when complete
 
 ## Notes
 """

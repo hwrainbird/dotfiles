@@ -16,6 +16,4 @@ tags: []
 
 ## Action Items
 
-- [ ] Test
-
 ## Notes
