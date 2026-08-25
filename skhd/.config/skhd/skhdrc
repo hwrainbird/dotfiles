@@ -1,14 +1,16 @@
  ctrl + alt - m : /usr/bin/osascript ~/bin/vivaldi-move-tab-next.applescript
 
 ## send window to monitor and follow focus
-hyper - p : /Users/knack/CustomScripts/SwitchSpaces/moveWindowLeftAndFollowFocus.sh
-hyper - u : /Users/knack/CustomScripts/SwitchSpaces/moveWindowRightAndFollowFocus.sh
+hyper - p : /Users/knack/bin/window_management/switch_spaces/moveWindowLeftAndFollowFocus.sh
+hyper - u : /Users/knack/bin/window_management/switch_spaces/moveWindowRightAndFollowFocus.sh
 
-# Focus using mnei (unified navigation scheme)
+# Focus using mnei (west/east on home row; e/n moved to stack cycle below because focus north/south is a no-op in stack layout)
 meh - m : /opt/homebrew/bin/yabai -m window --focus west
-meh - n : /opt/homebrew/bin/yabai -m window --focus south
-meh - e : /opt/homebrew/bin/yabai -m window --focus north
 meh - i : /opt/homebrew/bin/yabai -m window --focus east
+
+# Cycle windows within the current space's stack (e=next, n=prev)
+meh - e : /opt/homebrew/bin/yabai -m window --focus stack.next
+meh - n : /opt/homebrew/bin/yabai -m window --focus stack.prev
 
 # Focus using arrow keys
 meh - left : /opt/homebrew/bin/yabai -m window --focus west
@@ -40,6 +42,9 @@ meh - o : sh -c '/opt/homebrew/bin/yabai -m space --mirror x-axis'
 meh - t : sh -c '/opt/homebrew/bin/yabai -m window --toggle float; /opt/homebrew/bin/yabai -m window --grid 4:4:1:1:2:2'
 meh - f : sh -c '/opt/homebrew/bin/yabai -m window --toggle zoom-fullscreen'
 meh - b : sh -c '/opt/homebrew/bin/yabai -m space --balance'
+
+# Toggle current space between stack and bsp layout
+meh - k : sh -c 'if [ "$(/opt/homebrew/bin/yabai -m query --spaces --space | jq -r .type)" = "stack" ]; then /opt/homebrew/bin/yabai -m space --layout bsp; else /opt/homebrew/bin/yabai -m space --layout stack; fi'
 
 hyper - b : yabai -m space --layout bsp
 
