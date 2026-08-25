@@ -8,3 +8,9 @@
 	email = 140379782+hwrainbird@users.noreply.github.com
 [core]
 	hooksPath = /Users/knack/.config/git/hooks
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
