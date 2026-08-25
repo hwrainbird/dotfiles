@@ -202,3 +202,28 @@ symbol = " "
 
 [zig]
 symbol = " "
+
+[custom.scratch]
+command = "scratch -c"
+when = "test $(scratch -c) -gt 0"
+format = "[󰎞 $output]($style) "
+style = "bold yellow"
+
+[custom.scratch_empty]
+command = "echo 0"
+when = "test $(scratch -c) -eq 0"
+format = "[󰎞 $output]($style) "
+style = "bold yellow"
+
+[custom.new_tasks]
+command = "/Users/knack/bin/custom.starship/new-and-unexported"
+when = "test -n \"$(/Users/knack/bin/custom.starship/new-and-unexported)\""
+format = "[$output]($style) "
+style = "bold red"
+
+[custom.time_tracking]
+command = "/Users/knack/bin/custom.starship/time-tracking"
+when = "test -n \"$(/Users/knack/bin/custom.starship/time-tracking)\""
+format = "[\uf017]($style) [$output]($style) "
+style = "bold cyan"
+
