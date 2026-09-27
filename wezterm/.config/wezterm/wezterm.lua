@@ -175,8 +175,8 @@ config.key_tables = {
 			key = "y",
 			mods = "NONE",
 			action = act.Multiple({
-				{ CopyTo = "ClipboardAndPrimarySelection" },
-				{ CopyMode = "Close" },
+				act.CopyTo("ClipboardAndPrimarySelection"),
+				act.CopyMode("Close"),
 			}),
 		},
 
