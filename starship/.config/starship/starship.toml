@@ -227,3 +227,9 @@ when = "test -n \"$(/Users/knack/bin/custom.starship/time-tracking)\""
 format = "[\uf017]($style) [$output]($style) "
 style = "bold cyan"
 
+[custom.kb]
+command = "/Users/knack/bin/custom.starship/kb"
+when = "test -n \"$(/Users/knack/bin/custom.starship/kb)\""
+format = "[$output]($style) "
+style = "bold yellow"
+

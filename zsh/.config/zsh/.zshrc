@@ -148,9 +148,35 @@ alias rsync="rsync --exclude-from=/Users/knack/.rsync-exclude"
 alias cdf="cd \$(find . -type d | fzf)"
 alias cdf="cd \"\$(find . -type d | fzf)\""
 
-# Client documentation shortcuts
+# Client documentation shortcuts (legacy — kept for back-compat, prefer k / kfind)
 alias cdocs='cd /Users/knack/clients && ls -la */PROJECT_DOCS.md'
 alias fdocs='find /Users/knack/clients -name "PROJECT_DOCS.md" | fzf | xargs nvim'
+
+# --- kb: per-client knowledge base ---
+# Plain markdown files at ~/clients/<client>/KNOWLEDGE.md. Edited in $EDITOR.
+# The CLI lives at ~/bin/kb; the helpers below wrap it for fast typing.
+# Also: `work <id> done` nudges you to log notes as KB issues automatically.
+kb-detect-cwd() {
+  case "$PWD" in
+    "$HOME/clients/"*) basename "${PWD#$HOME/clients/}" ;;
+    *) echo "" ;;
+  esac
+}
+k() {                                       # open client KB (auto-detect from cwd)
+  local c="${1:-$(kb-detect-cwd)}"
+  [ -z "$c" ] && { echo "Not in a client dir. Usage: k <client>"; return 1; }
+  "$HOME/bin/kb" "$c"
+}
+kissue() {                                  # add an issue (interactive)
+  local c="${1:-$(kb-detect-cwd)}"
+  [ -z "$c" ] && { echo "Not in a client dir. Usage: kissue <client>"; return 1; }
+  "$HOME/bin/kb" issue "$c"
+}
+kfind() {                                   # grep across all client KBs
+  [ -z "$1" ] && { echo "Usage: kfind <term>"; return 1; }
+  "$HOME/bin/kb" find "$1"
+}
+ktoday() { "$HOME/bin/kb" today "${@:--d 7}"; }
 
 alias ls="eza"
 alias ll="eza -la"
@@ -167,3 +193,15 @@ alias tnext='task pro.not:learning pro.not:rainbird_apps tnext'
 # Carapace completion for taskwarrior
 eval "$(carapace _carapace)"
 
+
+# herdr: name ad-hoc panes after their directory, live as you cd.
+# Panes built by `work start` carry WORK_PANE_ROLE (notes/claude/shell) and
+# keep their role name. Backgrounded so a slow socket never delays a prompt.
+if [[ -n $HERDR_PANE_ID && -z $WORK_PANE_ROLE ]] && (( $+commands[herdr] )); then
+  _herdr_name_pane() {
+    herdr pane rename "$HERDR_PANE_ID" "${${PWD/#$HOME/~}:t}" >/dev/null 2>&1 &!
+  }
+  autoload -Uz add-zsh-hook
+  add-zsh-hook chpwd _herdr_name_pane
+  _herdr_name_pane
+fi
