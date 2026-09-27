@@ -75,6 +75,21 @@ uda.ticketid.label=Ticket ID
 uda.ticketid.type=string
 uda.tracked.label=Tracked
 uda.tracked.type=string
+# Herdr tab id (e.g. wC:t8) that `work start` built for this task — lets a
+# later start re-focus the same tab instead of building a duplicate.
+uda.herdrtab.label=Herdr Tab
+uda.herdrtab.type=string
+# When the weekly review (tn, tab 4) last looked at this task. A stale task
+# reviewed in the last 30 days stays out of the review list.
+uda.reviewed.label=Reviewed
+uda.reviewed.type=date
+# What kind of deadline `due` is: hard (must be met: a contract, an event),
+# client (the client asked for it: negotiable, by asking), self (your own
+# target). Unset, tn takes a ticket's date as the client's and any other as
+# yours.
+uda.duetype.label=Deadline
+uda.duetype.type=string
+uda.duetype.values=hard,client,self
 
 # Custom report that will work well with television
 report.tvnext.columns=uuid.short,status.short,priority,project,description.count

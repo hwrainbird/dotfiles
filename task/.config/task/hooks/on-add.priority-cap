@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+"""
+TaskWarrior hook: at most five high-priority (H) tasks at once.
+
+Installed twice, as on-add.priority-cap and on-modify.priority-cap (a symlink
+to this file). Taskwarrior hands an on-add hook one JSON line and an
+on-modify hook two (the task before and after), which is how this file tells
+which job it is doing.
+
+A task counts toward the cap when it is pending, priority H, in a client
+project, and triaged. Untriaged tickets (+new, tn's inbox) don't count: the
+fetcher copies the client's own priority onto them, and that is a suggestion
+until you accept the ticket. Accepting one as H is where the cap applies.
+
+Only a task *becoming* H is refused, so the tasks that were H before the cap
+existed keep working until you demote them in the weekly review (tn, tab 4).
+U (urgent) is not capped.
+
+Set TASK_HIGH_PRIORITY_CAP to change the number. tn reads the same variable,
+so the two always agree.
+"""
+
+import json
+import os
+import subprocess
+import sys
+
+CAP = int(os.environ.get("TASK_HIGH_PRIORITY_CAP", "5"))
+
+# Mirrors tn's BASE_FILTER: these projects never show in tn, so a cap they
+# counted toward would be a cap you couldn't see.
+OUT_OF_SCOPE = ("learning", "rainbird_apps", "rainbird-apps")
+
+
+def counts_toward_cap(task: dict | None) -> bool:
+    if not task:
+        return False
+    project = task.get("project", "").split(".")[0]
+    return (
+        task.get("status") in ("pending", "waiting")
+        and task.get("priority") == "H"
+        and "new" not in task.get("tags", [])
+        and project not in OUT_OF_SCOPE
+    )
+
+
+def high_priority_count() -> int:
+    """Tasks already counting toward the cap, read with hooks off so this
+    hook doesn't run itself."""
+    filters = ["status:pending", "priority:H", "-new"]
+    filters += [f"project.not:{p}" for p in OUT_OF_SCOPE]
+    result = subprocess.run(
+        ["task", "rc.hooks=off", "rc.verbose=nothing", *filters, "count"],
+        capture_output=True, text=True,
+    )
+    try:
+        return int(result.stdout.strip() or 0)
+    except ValueError:
+        # Can't count: let the change through rather than block all work
+        # over a bookkeeping failure.
+        return 0
+
+
+def main() -> int:
+    lines = [line for line in sys.stdin.read().splitlines() if line.strip()]
+    if not lines:
+        return 0
+    before = json.loads(lines[0]) if len(lines) == 2 else None
+    after = json.loads(lines[-1])
+
+    if counts_toward_cap(after) and not counts_toward_cap(before):
+        count = high_priority_count()
+        if count >= CAP:
+            # On a non-zero exit taskwarrior discards the change and shows this.
+            print(
+                f"High priority is full: {count} tasks are H and the cap is {CAP}. "
+                "Demote one first (tn, tab 4 lists them) or choose M."
+            )
+            return 1
+
+    print(json.dumps(after))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
