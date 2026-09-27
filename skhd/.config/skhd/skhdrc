@@ -35,6 +35,13 @@ hyper - 4  : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window
 hyper - 5 : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window | jq -r .id) && /opt/homebrew/bin/yabai -m window --space 5 && /opt/homebrew/bin/yabai -m space --focus 5 && /opt/homebrew/bin/yabai -m window --focus $win_id --mouse'
 hyper - 6 : sh -c 'win_id=$(/opt/homebrew/bin/yabai -m query --windows --window | jq -r .id) && /opt/homebrew/bin/yabai -m window --space 6 && /opt/homebrew/bin/yabai -m space --focus 6 && /opt/homebrew/bin/yabai -m window --focus $win_id --mouse'
 
+# --- WORKAROUND: space 6 via MEH+G ---
+# The Sweep's layer-8 D key is `&mt LGUI LC(LA(LS(N6)))` -- a mod-tap whose hold
+# binding (bare LGUI) fires after only 120ms, so Backspace+D usually emits a
+# modifier-only event and macOS's "Switch to Desktop 6" hotkey never sees MEH+6.
+# Until the keymap is reflashed, MEH+G (already sent reliably by layer 8) stands in.
+meh - g : /opt/homebrew/bin/yabai -m space --focus 6
+
 # Layout / State (unique keys only)
 meh - l : sh -c '/opt/homebrew/bin/yabai -m space --rotate 270'
 meh - v : sh -c '/opt/homebrew/bin/yabai -m space --mirror y-axis'
