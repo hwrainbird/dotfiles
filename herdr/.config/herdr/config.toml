@@ -1,9 +1,129 @@
+onboarding = false
 [theme]
 # Match WezTerm: switches between Catppuccin Mocha and Catppuccin Latte
 # based on host terminal appearance (OSC 2031 / luminance inference).
-auto_switch = true
+auto_switch = false
 dark_name = "catppuccin"
 light_name = "catppuccin-latte"
 
+name = "catppuccin-latte"
 [ui]
 agent_panel_sort = "spaces"
+# Only the zoom marker, which shows while a pane is zoomed.
+tab_bar_right = [
+  { type = "zoom" },
+]
+# These must sit above any [ui.*] sub-table header — TOML assigns every key
+# after a header to that table, so below [ui.sidebar.agents] they were ignored.
+show_agent_labels_on_pane_borders = true
+status_indicators = "symbols"
+
+# Agent rows. $task is reported by `work start` (work_cli/commands/herdr_sync.py).
+[ui.sidebar.agents]
+rows = [
+  [
+    "state_icon",
+    "machine",
+    "agent",
+    "workspace",
+  ],
+  [
+    { token = "tab", dim = true },
+    { token = "$task", fg = "#1e66f5" },
+  ],
+]
+
+# Claude writes its session name into the terminal title — lead with it.
+# $prompt ("› last thing you asked") is reported by ~/bin/claude-herdr-prompt
+# and cleared on session start, so a never-messaged session has no prompt row.
+[ui.sidebar.agents.rows_by_agent]
+claude = [
+  [
+    "state_icon",
+    "machine",
+    { token = "terminal_title_stripped", bold = true },
+  ],
+  [
+    { token = "$prompt", fg = "#8839ef" },
+  ],
+  [
+    { token = "workspace", dim = true },
+    "tab",
+  ],
+]
+
+# Space rows. $active / $today are reported by `work start|stop|done`.
+[ui.sidebar.spaces]
+rows = [
+  [
+    "state_icon",
+    "workspace",
+    { token = "$today", dim = true },
+  ],
+  [
+    { token = "$active", fg = "#40a02b" },
+  ],
+  [
+    "branch",
+    "git_status",
+  ],
+]
+[keys]
+# Pane focus: Colemak mnei + arrows (matches WezTerm copy mode)
+# First match wins; prefix+hjkl kept as fallback
+focus_pane_left = ["prefix+h", "alt+m", "alt+Left"]
+focus_pane_down = ["prefix+j", "alt+n", "alt+Down"]
+focus_pane_up = ["prefix+k", "alt+e", "alt+Up"]
+focus_pane_right = ["prefix+l", "alt+i", "alt+Right"]
+
+# Navigate mode (prefix+w opens it): Colemak mnei for pane nav,
+# Shift+mnei for workspace nav (Colemak analog of HJKL = "big jump")
+navigate_pane_left = "m"
+navigate_pane_down = "n"
+navigate_pane_up = "e"
+navigate_pane_right = "i"
+navigate_workspace_up = "up"
+navigate_workspace_down = "down"
+
+goto = "prefix+g"
+
+# Tab navigation (Colemak: m/I sit where HJKL's H/L live horizontally)
+# Shift+M/I = "big jump" between tabs, mirroring navigate_workspace_up/down
+previous_tab = "alt+shift+m"
+next_tab = "alt+shift+i"
+
+[ui.toast]
+delivery = "system"
+
+[[keys.command]]
+key = "prefix+alt+g"
+type = "popup"
+command = "tv space"
+description = "herdr space selector"
+width = "80%"
+height = "80%"
+
+# Descriptions show in the keybind help panel (prefix+?).
+[[keys.command]]
+key = "prefix+alt+s"
+type = "popup"
+command = "scratch -e"
+description = "scratch pad"
+width = "70%"
+height = "70%"
+
+[[keys.command]]
+key = "prefix+alt+y"
+type = "popup"
+command = "yazi \"${HERDR_ACTIVE_PANE_CWD:-$HOME}\""
+description = "yazi (at focused pane's dir)"
+width = "90%"
+height = "90%"
+
+[[keys.command]]
+key = "prefix+alt+r"
+type = "popup"
+command = "work review --pick"
+description = "review queue (focused client)"
+width = "90%"
+height = "85%"

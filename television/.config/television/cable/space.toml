@@ -1,0 +1,89 @@
+[metadata]
+name = "space"
+description = "Switch between herdr workspaces (spaces)"
+requirements = ["herdr", "jq"]
+
+# Each source line is: "<pretty column text>\t<workspace_id>"
+# `display` shows column 0, `output` and the actions use column 1 (the id).
+[source]
+command = '''
+herdr workspace list | jq -r '
+def pad($n): . as $s | $s + (($n - ($s|length)) as $d | if $d > 0 then " " * $d else "" end);
+.result.workspaces[]
+| (if .focused then ">" else " " end) as $mark
+| (if   .agent_status == "working" then "● working"
+   elif .agent_status == "idle"    then "○ idle"
+   else                                 "" end) as $status
+| (.label[0:19] | gsub("[\"$`\\\\]"; "")) as $label
+| [ ($mark + " " + ((.number|tostring)|pad(3)) + ($label|pad(21))
+     + (((.tab_count|tostring) + "t " + (.pane_count|tostring) + "p")|pad(9)) + $status | sub(" +$";"")),
+    .workspace_id
+  ] | @tsv'
+'''
+display = "{split:\t:0}"
+output = "{split:\t:1}"
+
+# Preview lists every tab in the space, and the panes inside each tab
+# (agent, working directory, and the agent's current terminal title).
+#
+# NOTE: tv 0.15.4 only substitutes `{}` in preview commands -- `{split:..}`
+# and `{N}` are passed through literally here (they DO work in actions and in
+# source display/output). So the workspace id is cut out of the raw line in
+# the shell instead. The source strips " $ ` \ from labels so this stays safe.
+[preview]
+command = '''
+W=$(printf '%s' "{}" | cut -f2)
+{ herdr tab list --workspace "$W"; herdr pane list --workspace "$W"; } \
+| jq -rn --arg home "$HOME" '
+def esc: "\u001b[" + . + "m";
+def wrap($n): ($n|esc) + . + ("0"|esc);
+def dim: wrap("2");
+def bold: wrap("1");
+def tilde: if startswith($home) then "~" + .[($home|length):] else . end;
+def glyph: if   . == "working" then ("●"|wrap("33"))
+           elif . == "idle"    then ("○"|wrap("32"))
+           else                     ("·"|wrap("90")) end;
+[inputs] as $in
+| ($in[0].result.tabs)  as $tabs
+| ($in[1].result.panes) as $panes
+| $tabs[]
+| . as $t
+| ( ($t.agent_status|glyph) + " "
+    + (("tab " + ($t.number|tostring) + ": " + $t.label)|bold)
+    + (if $t.focused then "  " + ("(focused)"|dim) else "" end) ),
+  ( $panes | map(select(.tab_id == $t.tab_id))[]
+    | "    " + (.agent_status|glyph) + " "
+      + (((.agent // "shell"))|wrap("36"))
+      + "  " + ((.cwd|tilde)|dim)
+      + (if .terminal_title_stripped
+         then "\n         " + (.terminal_title_stripped|dim)
+         else "" end) ),
+  ""'
+'''
+
+[keybindings]
+shortcut = "f8"
+enter = "actions:focus"
+ctrl-n = "actions:new"
+ctrl-r = "actions:rename"
+ctrl-x = "actions:close"
+
+[actions.focus]
+description = "Focus the selected space"
+command = "herdr workspace focus '{split:\t:1}' >/dev/null"
+mode = "execute"
+
+[actions.new]
+description = "Create a new space and focus it"
+command = "herdr workspace create --focus >/dev/null"
+mode = "execute"
+
+[actions.rename]
+description = "Rename the selected space"
+command = "printf 'New label: ' && read -r label && herdr workspace rename '{split:\t:1}' \"$label\" >/dev/null"
+mode = "execute"
+
+[actions.close]
+description = "Close the selected space (kills its panes)"
+command = "herdr workspace close '{split:\t:1}' >/dev/null"
+mode = "execute"
