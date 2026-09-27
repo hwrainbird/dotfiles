@@ -1,5 +1,8 @@
 [General]
 EDITOR = nvim
+# The task fields taskopen exports to commands as $TASK_<FIELD>. The default
+# is priority,project,tags,description; ticketid is needed by the Notes action.
+task_attributes = "priority,project,tags,description,ticketid"
 
 [Actions]
 # Action for markdown files (higher priority)
@@ -12,7 +15,11 @@ files.regex = "^[\\.\\/~]+.*\\.(txt|pdf|doc|docx|xls|xlsx|png|jpg|gif|html|csv)$
 files.command = "open $FILE"
 files.modes = "batch,any,normal"
 
-# Action for Notes annotations
+# Action for Notes annotations.
+# taskopen passes $UUID and $TASK_* as environment variables and runs this
+# through a shell, so they must be in DOUBLE quotes: single quotes stop the
+# shell expanding them, and the script then gets the literal text "$UUID".
+# Double quotes are safe with any title: an expanded value is never re-run.
 notes.regex = "Notes"
-notes.command = "$HOME/.config/taskopen/create-note.sh"
+notes.command = "$HOME/.config/taskopen/create-note.sh \"$UUID\" \"$TASK_TICKETID\" \"$TASK_PROJECT\" \"$TASK_DESCRIPTION\""
 notes.modes = "normal,any,batch"

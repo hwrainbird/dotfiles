@@ -67,7 +67,13 @@ def main():
 
     # Only assign ticket ID if not already set
     if not task_data.get("ticketid"):
-        task_data["ticketid"] = get_next_daily_sequence()
+        new_id = get_next_daily_sequence()
+        task_data["ticketid"] = new_id
+        # Stderr so it shows in the terminal but doesn't pollute the JSON
+        # on stdout (which taskwarrior parses as the modified task).
+        print(f"[on-add.assign-ticketid] assigned {new_id}", file=sys.stderr)
+    else:
+        print(f"[on-add.assign-ticketid] kept existing {task_data['ticketid']}", file=sys.stderr)
 
     # Output the modified task
     print(json.dumps(task_data))

@@ -1,101 +1,52 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# taskopen "Notes" action: resolve (or create) a task's note file and open it.
+#
+# taskopenrc passes $UUID and $TASK_* as positional arguments (taskopen sets
+# them as environment variables and the command line expands them). Note
+# creation is delegated to the taskwarrior on-add hook's script so there is
+# exactly one note template in the system.
+set -eu
 
-# Get current task data from taskwarrior
-# TODO(human): Fix task identification - $UUID variable is not defined
-# Need to determine how taskopen passes task information to this script
-TASK_TITLE=$(task $UUID export | jq -r '.[0].description // ""')
-TASK_PROJECT=$(task $UUID export | jq -r '.[0].project // ""')
-TASK_PRIORITY=$(task $UUID export | jq -r '.[0].priority // ""')
-TASK_STATUS=$(task $UUID export | jq -r '.[0].status // ""')
-TASK_TAGS=$(task $UUID export | jq -r '.[0].tags[]? // empty' | tr '\n' ' ' | sed 's/ $//')
-TICKET_ID=$(task $UUID export | jq -r '.[0].ticketid // ""')
+UUID="${1:-}"
+TICKET_ID="${2:-}"
+PROJECT="${3:-}"
+DESCRIPTION="${4:-}"
 
-# Use Ticket ID format if available, fallback to UUID
-if [ -n "$TICKET_ID" ]; then
-    FILE="$HOME/notes/task_notes/${TICKET_ID}.md"
-else
-    FILE="$HOME/notes/task_notes/$UUID.md"
+# An argument that is still a literal "$NAME" means taskopenrc didn't expand
+# it (single quotes do that). Stop rather than create a note called
+# "$TASK_TICKETID.md", which is what happened on 2026-09-25.
+for arg in "$UUID" "$TICKET_ID" "$PROJECT"; do
+    case "$arg" in
+        '$'[A-Z]*)
+            echo "create-note: taskopen passed '$arg' unexpanded; check the quoting in taskopenrc" >&2
+            exit 1
+            ;;
+    esac
+done
+
+RESOLVER="$HOME/bin/lib/shared/note_paths.py"
+CREATOR="$HOME/.config/task/scripts/create-task-notes.py"
+EDITOR_CMD="${EDITOR:-nvim}"
+
+FILE="$(python3 "$RESOLVER" find "$TICKET_ID" "$UUID" 2>/dev/null || true)"
+
+if [ -z "$FILE" ]; then
+    ID="${TICKET_ID:-$UUID}"
+    if [ -z "$ID" ]; then
+        echo "create-note: no ticket id or uuid supplied by taskopen" >&2
+        exit 1
+    fi
+    python3 -c 'import json,sys; print(json.dumps({
+        "uuid": sys.argv[1], "ticketid": sys.argv[2],
+        "description": sys.argv[3], "project": sys.argv[4], "entry": ""}))' \
+        "$UUID" "$ID" "$DESCRIPTION" "$PROJECT" \
+        | python3 "$CREATOR" >/dev/null
+    FILE="$(python3 "$RESOLVER" find "$ID" "$UUID" 2>/dev/null || true)"
 fi
 
-if [ ! -f "$FILE" ]; then
-    # Create new file with template
-    
-    cat > "$FILE" << EOF
-# Task Notes: $TASK_TITLE
-
-## Notes
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Markdown Quick Reference
-
-### Headers
-\`# H1\`, \`## H2\`, \`### H3\`
-
-### Emphasis
-\`**bold**\`, \`*italic*\`, \`~~strikethrough~~\`
-
-### Lists
-- Bullet item
-1. Numbered item
-- [ ] Checkbox (unchecked)
-- [x] Checkbox (checked)
-
-### Links & Code
-\`[link text](url)\`
-\`\`\`inline code\`\`\`
-\`\`\`
-code block
-\`\`\`
-
-### Other
-> Quote block
-| Table | Header |
-|-------|--------|
-| Cell  | Cell   |
-EOF
+if [ -z "$FILE" ]; then
+    echo "create-note: could not resolve a note path" >&2
+    exit 1
 fi
 
-# Open in nvim
-nvim "$FILE"
+exec "$EDITOR_CMD" "$FILE"

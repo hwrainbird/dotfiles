@@ -16,4 +16,8 @@ tags: []
 
 ## Action Items
 
+## Sessions
+<!-- `work <id> start` opens a new session here and shows your last NEXT: line.
+     `work <id> stop` / `work <id> done` closes it with end time + duration. -->
+
 ## Notes

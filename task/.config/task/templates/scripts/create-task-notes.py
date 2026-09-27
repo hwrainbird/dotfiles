@@ -5,6 +5,9 @@ import json
 import os
 from datetime import datetime
 
+sys.path.insert(0, os.path.expanduser("~/bin/lib/shared"))
+from note_paths import note_path as resolve_note_path
+
 def load_template():
     """Load the note template from file"""
     template_path = os.path.expanduser('~/.config/task/templates/task-note-template.md')
@@ -26,8 +29,6 @@ def load_template():
 ## Attachments
 
 ## Action Items
-- [ ] Review task details
-- [ ] Update task status when complete
 
 ## Notes
 """
@@ -44,24 +45,20 @@ def create_task_notes(task_data):
     if not uuid:
         return task_data  # No UUID, nothing to do
     
-    # Ensure notes directory exists
-    notes_dir = '/Users/knack/notes/task_notes'
-    os.makedirs(notes_dir, exist_ok=True)
-    
     # Ticket ID is assigned by on-add.assign-ticketid hook
     # If still missing (hook disabled?), skip note creation
     if not ticket_id:
         return task_data
-    
-    # Always use ticket ID for filename (consistent naming)
-    notes_file = f"{notes_dir}/{ticket_id}.md"
+
+    # Location is owned by note_paths: ~/clients/<client>/tasks/<id>.md
+    notes_file = str(resolve_note_path(ticket_id, project))
     
     # Only create notes if file doesn't exist
     if not os.path.exists(notes_file):
         # Load and process template
         template = load_template()
         created_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
+
         # Replace template variables
         note_content = template.format(
             description=description,
@@ -70,9 +67,14 @@ def create_task_notes(task_data):
             project=project,
             created_date=created_date
         )
-        
+
         with open(notes_file, 'w') as f:
             f.write(note_content)
+        # Stderr so the user sees it in the terminal without polluting
+        # the JSON stdout that taskwarrior is parsing.
+        print(f"[on-add.create-notes] wrote {notes_file}", file=sys.stderr)
+    else:
+        print(f"[on-add.create-notes] kept existing {notes_file}", file=sys.stderr)
     
     # Add annotation with the notes file path
     if 'annotations' not in task_data:
