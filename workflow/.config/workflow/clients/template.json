@@ -7,5 +7,13 @@
   "contact_email": "",
   "hourly_rate": 0,
   "is_sub_client": false,
-  "description": "Client configuration"
+  "description": "Client configuration",
+  "reports": {
+    "services": [],
+    "repo": "",
+    "github": ""
+  },
+  "make": {
+    "organization_ids": []
+  }
 }
