@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Count timewarrior entries without 'exported' or 'failed_export' tags
+# Only counts entries BEFORE today (today's work is excluded)
+# Note: timewarrior stores tags with '+' prefix internally
+
+today=$(date +%Y%m%d)
+
+count=$(timew export 2>/dev/null | jq --arg today "$today" '[
+  .[] |
+  select(.tags | index("exported") | not) |
+  select(.tags | index("+exported") | not) |
+  select(.tags | index("failed_export") | not) |
+  select(.tags | index("+failed_export") | not) |
+  select(.start[0:8] < $today)
+] | length' 2>/dev/null)
+
+if [ -n "$count" ] && [ "$count" -gt 0 ]; then
+    echo "$count"
+fi

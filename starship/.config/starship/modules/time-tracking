@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Show current timewarrior tracking duration when active
+
+output=$(timew 2>/dev/null)
+if echo "$output" | grep -q "^Tracking"; then
+    # Parse the Total line (H:MM:SS format) — not Current (which shows wall clock)
+    total=$(echo "$output" | awk '/^  Total/ {print $2}')
+    
+    # H:MM:SS format
+    IFS=':' read -r h m s <<< "$total"
+    hours=$((10#$h))
+    mins=$((10#$m))
+    
+    if [ $hours -gt 0 ]; then
+        echo "${hours}h ${mins}m"
+    else
+        echo "${mins}m"
+    fi
+fi

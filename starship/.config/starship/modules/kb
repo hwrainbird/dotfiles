@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Starship custom module: KB status when inside ~/clients/<client>/
+#
+# Output:
+#   - empty if not in a client dir
+#   - "📚 empty"   if KB exists but has no real-date entries
+#   - "📚 3d ago"  if last entry is N days old
+#   - "📚 today"   if last entry is today
+#   - nothing if last entry is <3 days old (don't nag)
+#
+# "Real" entries are `### YYYY-MM-DD:` lines; XXXX placeholders don't count.
+
+set -e
+
+# Detect client from cwd
+case "$PWD" in
+  "$HOME/clients/"*)
+    client="${PWD#$HOME/clients/}"
+    client="${client%%/*}"  # take first path component
+    ;;
+  *)
+    exit 0
+    ;;
+esac
+
+kb="$HOME/clients/$client/KNOWLEDGE.md"
+[ -f "$kb" ] || exit 0
+
+# Most recent real-date entry (|| true: grep exits 1 on no match, which set -e would
+# treat as fatal and skip the "empty" branch below)
+last=$(grep -E '^### [0-9]{4}-' "$kb" 2>/dev/null \
+       | grep -v 'XXXX-' \
+       | head -1 \
+       | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
+
+if [ -z "$last" ]; then
+  # KB exists but only has XXXX placeholders or no entries
+  echo "📚 empty"
+  exit 0
+fi
+
+# Compute days since (midnight of $last) — BSD date (macOS) first, GNU date (Linux) fallback.
+# BSD fills unparsed fields from the current time, so pass 00:00:00 to match GNU's midnight default.
+then_epoch=$(date -j -f "%Y-%m-%d %H:%M:%S" "$last 00:00:00" +%s 2>/dev/null \
+             || date -d "$last" +%s 2>/dev/null) || exit 0
+now_epoch=$(date +%s)
+days=$(( (now_epoch - then_epoch) / 86400 ))
+
+# Don't nag if recent
+[ "$days" -lt 3 ] && exit 0
+
+if [ "$days" -eq 0 ]; then
+  echo "📚 today"
+elif [ "$days" -lt 30 ]; then
+  echo "📚 ${days}d"
+elif [ "$days" -lt 365 ]; then
+  echo "📚 $((days / 30))mo"
+else
+  echo "📚 $((days / 365))y"
+fi

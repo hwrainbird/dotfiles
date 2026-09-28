@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Shows new tasks + unexported entries count, both in red
+# Format: ⚡3 📤 12 (bolt = new tasks, upload = unexported/failed)
+# - New tasks: pending tasks with +new tag
+# - Unexported: entries without 'exported'/+exported tag, pre-today, last 12 months
+
+today=$(date +%Y%m%d)
+twelve_months_ago=$(date -v-1y +%Y%m%d 2>/dev/null || date -d "12 months ago" +%Y%m%d 2>/dev/null)
+
+# New tasks count — `count` has no implicit status filter (unlike reports such as `list`),
+# so without status:pending it also counts deleted/completed +new tasks
+new_count=$(task +new status:pending count 2>/dev/null)
+
+# Unexported count (no exported/+exported tag, pre-today, last 12 months)
+# Excludes failed_export/+failed_export entries (already handled = won't export again)
+unexported_count=$(timew export 2>/dev/null | jq --arg today "$today" --arg twelve "$twelve_months_ago" '[
+  .[] |
+  select(.start[0:8] < $today) |
+  select(.start[0:8] >= $twelve) |
+  select(.tags | index("exported") | not) |
+  select(.tags | index("+exported") | not) |
+  select(.tags | index("failed_export") | not) |
+  select(.tags | index("+failed_export") | not)
+] | length' 2>/dev/null)
+
+output=""
+[ -n "$new_count" ] && [ "$new_count" -gt 0 ] && output="${output}\uf0e7 ${new_count}"
+[ -n "$unexported_count" ] && [ "$unexported_count" -gt 0 ] && output="${output} \uf0ee ${unexported_count}"
+
+echo -en "$output"
