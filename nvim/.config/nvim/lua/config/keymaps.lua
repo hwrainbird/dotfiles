@@ -142,7 +142,7 @@ map("n", "J", "N", { desc = "Previous search result" })
 -- Custom commands for Node.js server
 vim.api.nvim_create_user_command(
   "KStart",
-  "!node /Users/knack/AppDev/Lib/KTL/NodeJS/NodeJS_FileServer.js &",
+  "!node $HOME/app_dev/Lib/KTL/NodeJS/NodeJS_FileServer.js &",
   { desc = "Start Node.js file server" }
 )
 vim.api.nvim_create_user_command("KKill", "!pkill node", { desc = "Kill Node.js server" })

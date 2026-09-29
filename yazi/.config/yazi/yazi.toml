@@ -32,19 +32,24 @@ json = [
   { run = 'nvim "$@"', block = true, desc = "Edit with nvim" },
 ]
 
-# CSV → Excel
+# `for` picks the opener per OS. orphan keeps GUI apps open after yazi quits.
+
+# CSV → Excel on macOS, LibreOffice Calc on Linux
 csv = [
-  { run = 'open -a "Microsoft Excel" "$@"', desc = "Open with Excel" },
+  { run = 'open -a "Microsoft Excel" "$@"', desc = "Open with Excel", for = "macos" },
+  { run = 'libreoffice --calc "$@"', orphan = true, desc = "Open with LibreOffice Calc", for = "linux" },
 ]
 
-# Excel files → Excel (Linux: use libreoffice --calc)
+# Excel files → Excel on macOS, LibreOffice Calc on Linux
 excel = [
-  { run = 'open -a "Microsoft Excel" "$@"', desc = "Open with Excel" },
+  { run = 'open -a "Microsoft Excel" "$@"', desc = "Open with Excel", for = "macos" },
+  { run = 'libreoffice --calc "$@"', orphan = true, desc = "Open with LibreOffice Calc", for = "linux" },
 ]
 
-# Word documents → Word (Linux: use xdg-open or libreoffice --writer)
+# Word documents → Word on macOS, LibreOffice Writer on Linux
 word = [
-  { run = 'open -a "Microsoft Word" "$@"', desc = "Open with Word" },
+  { run = 'open -a "Microsoft Word" "$@"', desc = "Open with Word", for = "macos" },
+  { run = 'libreoffice --writer "$@"', orphan = true, desc = "Open with LibreOffice Writer", for = "linux" },
 ]
 
 # Archive files
@@ -54,17 +59,20 @@ archive = [
 
 # Images
 image = [
-  { run = 'open "$@"', desc = "Open with default app" },
+  { run = 'open "$@"', desc = "Open with default app", for = "macos" },
+  { run = 'xdg-open "$1"', desc = "Open with default app", for = "linux" },
 ]
 
 # Videos
 video = [
-  { run = 'open "$@"', desc = "Open with default app" },
+  { run = 'open "$@"', desc = "Open with default app", for = "macos" },
+  { run = 'xdg-open "$1"', desc = "Open with default app", for = "linux" },
 ]
 
 # PDFs
 pdf = [
-  { run = 'open "$@"', desc = "Open with default app" },
+  { run = 'open "$@"', desc = "Open with default app", for = "macos" },
+  { run = 'xdg-open "$1"', desc = "Open with default app", for = "linux" },
 ]
 
 [open]

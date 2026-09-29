@@ -23,10 +23,10 @@ return {
       -- current markdown file being edited.
       workspaces = {
         {
-          path = "/Users/knack/notes",
+          path = vim.fn.expand("~/notes"),
         },
         {
-          path = "/Users/knack/clients",
+          path = vim.fn.expand("~/clients"),
         },
         {
           name = "global",

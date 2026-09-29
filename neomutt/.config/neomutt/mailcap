@@ -1,3 +1,4 @@
-text/html; open %s; nametemplate=%s.html
-application/pdf; open %s
-image/*; open %s
+# xdg-open on Linux, falling back to open on macOS
+text/html; xdg-open %s 2>/dev/null || open %s; nametemplate=%s.html
+application/pdf; xdg-open %s 2>/dev/null || open %s
+image/*; xdg-open %s 2>/dev/null || open %s

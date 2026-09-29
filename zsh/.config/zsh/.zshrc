@@ -1,7 +1,11 @@
 # PATH setup first - before any commands that depend on it
-export JAVA_HOME="/Library/Java/JavaVirtualMachines/liberica-jdk-21.jdk/Contents/Home"
+if [[ $OSTYPE == darwin* ]]; then
+  export JAVA_HOME="/Library/Java/JavaVirtualMachines/liberica-jdk-21.jdk/Contents/Home"
+else
+  export JAVA_HOME="/usr/lib/jvm/default"   # Arch: pick the version with archlinux-java
+fi
 export PATH="$JAVA_HOME/bin:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
+[[ -d /opt/homebrew/bin ]] && export PATH="/opt/homebrew/bin:$PATH"
 export PATH="$HOME/.local/share/npm-global/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
@@ -25,8 +29,9 @@ alias clear='printf "\033[2J\033[H"'
 alias mutt='neomutt'
 alias fv='nvim $(fzf -m --preview="bat --color=always {}")'
 
-# Set up fzf key bindings and fuzzy completion (now that PATH is set)
-source <(fzf --zsh)
+# History. macOS's /etc/zshrc sets these for you; on Linux zsh saves nothing without them.
+HISTSIZE=10000
+SAVEHIST=10000
 
 # Vi mode
 bindkey -v
@@ -94,9 +99,9 @@ alias ta='tmux attach'
 alias tls='tmux list-sessions'
 alias cc='claude'
 
-# fzf key bindings and completion (moved after PATH setup)
-source "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
-source "/opt/homebrew/opt/fzf/shell/completion.zsh"
+# fzf key bindings and completion. Sourced after the bindkey lines above so
+# fzf's Ctrl-R wins over plain history search. Works wherever fzf is installed.
+source <(fzf --zsh)
 
 
 
@@ -144,13 +149,13 @@ tsummary() {
 alias workflow-guide="nvim ~/WORKFLOW_GUIDE.md"
 alias workflow-view="nb show rainbird_apps:2 | glow"
 alias knackserver="node $HOME/app_dev/Lib/KTL/NodeJS/NodeJS_FileServer.js $HOME/app_dev"
-alias rsync="rsync --exclude-from=/Users/knack/.rsync-exclude"
+alias rsync="rsync --exclude-from=$HOME/.config/rsync/exclude"
 alias cdf="cd \$(find . -type d | fzf)"
 alias cdf="cd \"\$(find . -type d | fzf)\""
 
 # Client documentation shortcuts (legacy — kept for back-compat, prefer k / kfind)
-alias cdocs='cd /Users/knack/clients && ls -la */PROJECT_DOCS.md'
-alias fdocs='find /Users/knack/clients -name "PROJECT_DOCS.md" | fzf | xargs nvim'
+alias cdocs='cd ~/clients && ls -la */PROJECT_DOCS.md'
+alias fdocs='find ~/clients -name "PROJECT_DOCS.md" | fzf | xargs nvim'
 
 # --- kb: per-client knowledge base ---
 # Plain markdown files at ~/clients/<client>/KNOWLEDGE.md. Edited in $EDITOR.
@@ -183,7 +188,7 @@ alias ll="eza -la"
 # Initialize tools (after PATH is set)
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
-autoload -U compinit && compinit
+autoload -U compinit && compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/compdump"
 eval "$(carapace _carapace)"
 export TASKRC=~/.config/task/taskrc
 
@@ -193,6 +198,12 @@ alias tnext='task pro.not:learning pro.not:rainbird_apps tnext'
 # Carapace completion for taskwarrior
 eval "$(carapace _carapace)"
 
+# Go-installed binaries (default GOPATH)
+export PATH="$PATH:$HOME/go/bin"
+
+# television shell integration: Ctrl-T smart autocomplete, Ctrl-R history.
+# Loaded after fzf so tv takes over those two keys; delete this line to give them back to fzf.
+eval "$(tv init zsh)"
 
 # herdr: name ad-hoc panes after their directory, live as you cd.
 # Panes built by `work start` carry WORK_PANE_ROLE (notes/claude/shell) and

@@ -12,7 +12,7 @@
 # the database location (in a subdirectory called ".notmuch").
 #
 [database]
-path=/Users/knack/Mail
+path=mail
 # User configuration
 #
 # Here is where you can let notmuch know how you would like to be
