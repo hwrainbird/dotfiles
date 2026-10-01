@@ -215,16 +215,20 @@ when = "test $(scratch -c) -eq 0"
 format = "[󰎞 $output]($style) "
 style = "bold yellow"
 
+# These two run their script once per prompt: `when = true`, and the `( \u2026 )`
+# in `format` hides the module when the script prints nothing. A `when` that
+# runs the script too doubles the work, and under load (tn, cron, a hook, or
+# several herdr panes drawing at once) that pushed them past command_timeout.
 [custom.new_tasks]
 command = "$HOME/.config/starship/modules/new-and-unexported"
-when = "test -n \"$($HOME/.config/starship/modules/new-and-unexported)\""
-format = "[$output]($style) "
+when = true
+format = "([$output]($style) )"
 style = "bold red"
 
 [custom.time_tracking]
 command = "$HOME/.config/starship/modules/time-tracking"
-when = "test -n \"$($HOME/.config/starship/modules/time-tracking)\""
-format = "[\uf017]($style) [$output]($style) "
+when = true
+format = "([\uf017 $output]($style) )"
 style = "bold cyan"
 
 [custom.kb]

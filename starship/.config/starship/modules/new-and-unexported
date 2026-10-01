@@ -6,14 +6,20 @@
 
 today=$(date +%Y%m%d)
 twelve_months_ago=$(date -v-1y +%Y%m%d 2>/dev/null || date -d "12 months ago" +%Y%m%d 2>/dev/null)
+# The same day as timew reads it, to narrow the export (macOS date, then GNU)
+twelve_months_ago_iso=$(date -v-1y +%Y-%m-%d 2>/dev/null || date -d "12 months ago" +%Y-%m-%d 2>/dev/null)
 
 # New tasks count — `count` has no implicit status filter (unlike reports such as `list`),
-# so without status:pending it also counts deleted/completed +new tasks
-new_count=$(task +new status:pending count 2>/dev/null)
+# so without status:pending it also counts deleted/completed +new tasks.
+# rc.gc=off: otherwise every prompt writes to the task database (taskwarrior's
+# tidy-up runs on each command) and waits its turn behind tn, cron and hooks.
+new_count=$(task rc.gc=off +new status:pending count 2>/dev/null)
 
 # Unexported count (no exported/+exported tag, pre-today, last 12 months)
-# Excludes failed_export/+failed_export entries (already handled = won't export again)
-unexported_count=$(timew export 2>/dev/null | jq --arg today "$today" --arg twelve "$twelve_months_ago" '[
+# Excludes failed_export/+failed_export entries (already handled = won't export again).
+# timew narrows to the last 12 months itself, rather than exporting every
+# interval ever for jq to throw most away; jq's filters still decide exactly.
+unexported_count=$(timew export "$twelve_months_ago_iso" - today 2>/dev/null | jq --arg today "$today" --arg twelve "$twelve_months_ago" '[
   .[] |
   select(.start[0:8] < $today) |
   select(.start[0:8] >= $twelve) |
