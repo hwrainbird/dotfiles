@@ -68,7 +68,7 @@ uda.category.values=bugfix,feature,tweak,meeting,admin,research,documentation,te
 report.tnext.columns=id,priority,project,tags,due.relative,description.count,estimate,tracked,category,urgency
 report.tnext.labels=ID,P,Project,Tag,Due,Description,Est,Tracked,Cat,Urg
 report.tnext.description=Next tasks with estimate and category
-report.tnext.filter=status:pending -WAITING
+report.tnext.filter=status:pending -WAITING delivered.none:
 report.tnext.sort=urgency+
 uda.ticketid.label=Ticket ID
 uda.ticketid.type=string
@@ -89,6 +89,12 @@ uda.reviewed.type=date
 uda.duetype.label=Deadline
 uda.duetype.type=string
 uda.duetype.values=hard,client,self
+# When the work was delivered: finished as far as you know, but kept open to
+# catch bugs and tweaks while the client uses it. tn hides it like a waiting
+# task, and the weekly review asks about it after 14 days (`W` sets it).
+uda.delivered.label=Delivered
+uda.delivered.type=date
+urgency.uda.delivered.coefficient=-4.0
 
 # Custom report that will work well with television
 report.tvnext.columns=uuid.short,status.short,priority,project,description.count
