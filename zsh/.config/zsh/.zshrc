@@ -28,6 +28,8 @@ alias clear="printfddd"
 alias clear='printf "\033[2J\033[H"'
 alias mutt='neomutt'
 alias fv='nvim $(fzf -m --preview="bat --color=always {}")'
+alias invoice=~/clients/rainbird_apps/invoicing/.venv/bin/invoice
+
 
 # History. macOS's /etc/zshrc sets these for you; on Linux zsh saves nothing without them.
 HISTSIZE=10000
