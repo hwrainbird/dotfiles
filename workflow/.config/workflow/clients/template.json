@@ -15,5 +15,8 @@
   },
   "make": {
     "organization_ids": []
+  },
+  "knack": {
+    "redact_fields": []
   }
 }
